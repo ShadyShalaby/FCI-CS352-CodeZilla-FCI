@@ -32,8 +32,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		UserController controller = Application.getUserController();
-		controller.login(userNameEditText.getText().toString(), passwordEditText
-						.getText().toString());
+		controller.login(userNameEditText.getText().toString(),
+				passwordEditText.getText().toString());
 
 	}
 

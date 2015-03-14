@@ -34,15 +34,18 @@ public class UserController {
 
 	public void login(String userName, String password) {
 
+		System.out.println(currentActiveUser.getEmail());
 		new Connection().execute(
-				"http://fci-swe-apps.appspot.com/rest/LoginService", userName,
-				password, "LoginService");
+				"http://fci-codezilla256.appspot.com/rest/LoginService",
+				userName, password, "LoginService");
+
+		System.out.println(currentActiveUser.getEmail());
 	}
 
 	public void signUp(String userName, String email, String password) {
 		new Connection().execute(
-				"http://fci-swe-apps.appspot.com/rest/RegistrationService", userName,
-				email, password, "RegistrationService");
+				"http://fci-codezilla256.appspot.com/rest/RegistrationService",
+				userName, email, password, "RegistrationService");
 	}
 
 	static private class Connection extends AsyncTask<String, String, String> {
@@ -79,6 +82,7 @@ public class UserController {
 						connection.getOutputStream());
 				writer.write(urlParameters);
 				writer.flush();
+
 				String line, retJson = "";
 				BufferedReader reader = new BufferedReader(
 						new InputStreamReader(connection.getInputStream()));
@@ -86,6 +90,7 @@ public class UserController {
 				while ((line = reader.readLine()) != null) {
 					retJson += line;
 				}
+
 				return retJson;
 
 			} catch (IOException e) {
@@ -102,28 +107,33 @@ public class UserController {
 			super.onPostExecute(result);
 			try {
 				JSONObject object = new JSONObject(result);
-				
-				if(!object.has("Status") || object.getString("Status").equals("Failed")){
-					Toast.makeText(Application.getAppContext(), "Error occured", Toast.LENGTH_LONG).show();
+
+				if (!object.has("Status")
+						|| object.getString("Status").equals("Failed")) {
+					Toast.makeText(Application.getAppContext(),
+							"Error occured", Toast.LENGTH_LONG).show();
 					return;
 				}
-				
+
 				if (serviceType.equals("LoginService")) {
-					
+
 					currentActiveUser = UserEntity.createLoginUser(result);
-					
+
 					Intent homeIntent = new Intent(Application.getAppContext(),
 							HomeActivity.class);
-					System.out.println("--- " + serviceType + "IN LOGIN " + object.getString("Status"));
-					
+
+					System.out.println("--- " + serviceType + "IN LOGIN "
+							+ object.getString("Status"));
+
 					homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					/* here you should initialize user entity */
 					homeIntent.putExtra("status", object.getString("Status"));
 					homeIntent.putExtra("name", object.getString("name"));
-					
+
 					Application.getAppContext().startActivity(homeIntent);
 				}
-				else{
+
+				else {
 					Intent homeIntent = new Intent(Application.getAppContext(),
 							HomeActivity.class);
 					homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -135,7 +145,7 @@ public class UserController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
 
 	}

@@ -1,4 +1,5 @@
 package com.FCI.SWE.Models;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,8 +18,7 @@ public class UserEntity {
 	 * @param password
 	 *            user provided password
 	 */
-	
-	
+
 	private UserEntity(String name, String email, String password) {
 		this.name = name;
 		this.email = email;
@@ -49,19 +49,17 @@ public class UserEntity {
 	 */
 	public static UserEntity createLoginUser(String json) {
 
-		
-			JSONObject object;
-			try {
-				object = new JSONObject(json);
-				return  new UserEntity(object.get("name").toString(), object.get(
-						"email").toString(), object.get("password").toString());
-				
-			
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
+		JSONObject object;
+		try {
+			object = new JSONObject(json);
+			return new UserEntity(object.get("name").toString(), object.get(
+					"email").toString(), object.get("password").toString());
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		return null;
 
 	}
