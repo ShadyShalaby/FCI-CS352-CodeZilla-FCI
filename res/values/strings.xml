@@ -9,5 +9,10 @@
     <string name="username">User name</string>
     <string name="password">Password</string>
     <string name="email">Email</string>
+    <string name="requestText">Enter email destination </string>
+    <string name="requestButton">Send Request</string>
+    <string name="SendFriendRequestButton">Send Friend Request</string>
+    <string name="AddFriendButton">Accept Friend</string>
+    <string name="signoutButton">Sign Out</string>
 
 </resources>

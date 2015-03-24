@@ -11,4 +11,23 @@
     
     
     />
+
+<Button
+    android:id="@+id/sendRequestActivity"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/SendFriendRequestButton" />
+
+<Button
+    android:id="@+id/addFriendActivity"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/AddFriendButton" />
+
+<Button
+    android:id="@+id/signOutActivity"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/signoutButton" />
+
 </LinearLayout>

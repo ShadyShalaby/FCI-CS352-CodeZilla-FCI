@@ -21,11 +21,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		userNameEditText = (EditText) findViewById(R.id.username);
+		userNameEditText = (EditText) findViewById(R.id.usernameLogin);
 		passwordEditText = (EditText) findViewById(R.id.password);
 		loginButton = (Button) findViewById(R.id.loginButton);
 		loginButton.setOnClickListener(this);
-
 	}
 
 	@Override

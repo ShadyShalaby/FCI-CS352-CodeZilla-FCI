@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Iterator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,6 +16,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.FCI.SWE.Models.UserEntity;
+import com.FCI.SWE.SocialNetwork.FriendRequestsActivity;
 import com.FCI.SWE.SocialNetwork.HomeActivity;
 
 public class UserController {
@@ -32,22 +34,44 @@ public class UserController {
 
 	}
 
-	public void login(String userName, String password) {
+	public void login(String userName, String password) { 
 
-		System.out.println(currentActiveUser.getEmail());
+		//System.out.println(currentActiveUser.getEmail());
+		String urlParameters = "uname="+userName+"&password="+password;
+
 		new Connection().execute(
-				"http://fci-codezilla256.appspot.com/rest/LoginService",
-				userName, password, "LoginService");
-
-		System.out.println(currentActiveUser.getEmail());
+				"http://fci-codezilla256.appspot.com/rest/LoginService", userName,
+				password, "LoginService");
+		
+		//System.out.println(currentActiveUser.getEmail());
 	}
+	
 
+	public void searchFriends()
+	{
+		new Connection().execute(
+				"http://fci-codezilla256.appspot.com/rest/SearchFriendRequest",
+				currentActiveUser.getEmail(), "SearchFriendRequest");
+	}
+	
 	public void signUp(String userName, String email, String password) {
 		new Connection().execute(
 				"http://fci-codezilla256.appspot.com/rest/RegistrationService",
 				userName, email, password, "RegistrationService");
 	}
 
+	public void sendRequest(String destEmail )
+	{
+		new Connection().execute(
+				"http://fci-codezilla256.appspot.com/rest/FriendRequest",
+				currentActiveUser.getEmail() , destEmail , "FriendRequest");
+		
+	}
+	 
+  public void signOut()
+  {
+	  currentActiveUser = null;
+  }
 	static private class Connection extends AsyncTask<String, String, String> {
 
 		String serviceType;
@@ -58,8 +82,17 @@ public class UserController {
 			URL url;
 			serviceType = params[params.length - 1];
 			String urlParameters;
+			
 			if (serviceType.equals("LoginService"))
 				urlParameters = "uname=" + params[1] + "&password=" + params[2];
+							
+			else if(serviceType.equals("FriendRequest"))
+				urlParameters = "Esource=" + params[1] + "&Edestination=" + params[2];
+			
+			else if(serviceType.equals("SearchFriendRequest"))
+				
+				urlParameters = "Esource" + params[1];
+			
 			else
 				urlParameters = "uname=" + params[1] + "&email=" + params[2]
 						+ "&password=" + params[3];
@@ -106,8 +139,9 @@ public class UserController {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 			try {
+				Toast.makeText(Application.getAppContext(), result,Toast.LENGTH_LONG).show();
 				JSONObject object = new JSONObject(result);
-
+						
 				if (!object.has("Status")
 						|| object.getString("Status").equals("Failed")) {
 					Toast.makeText(Application.getAppContext(),
@@ -133,6 +167,26 @@ public class UserController {
 					Application.getAppContext().startActivity(homeIntent);
 				}
 
+				else if(serviceType.equals("SearchFriendRequest"))
+				{
+       				 Iterator<String> iter = object.keys();
+       				 String unames="", emails="";
+					 while (iter.hasNext()) {
+					        String key = iter.next();
+					        try {
+					        	unames += key+"#";
+					        	emails += object.get(key)+"#";
+					        } catch (JSONException e) {
+					            // Something went wrong!
+					        }
+					 }
+					 Intent homeIntent = new Intent(Application.getAppContext(),
+								FriendRequestsActivity.class);
+						homeIntent.putExtra("uname", unames);
+						homeIntent.putExtra("emails", emails);
+
+						Application.getAppContext().startActivity(homeIntent);
+				}
 				else {
 					Intent homeIntent = new Intent(Application.getAppContext(),
 							HomeActivity.class);
