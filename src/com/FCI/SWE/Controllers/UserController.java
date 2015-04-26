@@ -19,6 +19,7 @@ import com.FCI.SWE.Models.UserEntity;
 import com.FCI.SWE.SocialNetwork.FriendRequestsActivity;
 import com.FCI.SWE.SocialNetwork.HomeActivity;
 
+
 public class UserController {
 
 	private static UserEntity currentActiveUser;
@@ -33,7 +34,7 @@ public class UserController {
 	private UserController() {
 
 	}
-
+	
 	public void login(String userName, String password) { 
 
 		//System.out.println(currentActiveUser.getEmail());
@@ -52,6 +53,7 @@ public class UserController {
 		new Connection().execute(
 				"http://fci-codezilla256.appspot.com/rest/SearchFriendRequest",
 				currentActiveUser.getEmail(), "SearchFriendRequest");
+		
 	}
 	
 	public void signUp(String userName, String email, String password) {
@@ -64,14 +66,50 @@ public class UserController {
 	{
 		new Connection().execute(
 				"http://fci-codezilla256.appspot.com/rest/FriendRequest",
-				currentActiveUser.getEmail() , destEmail , "FriendRequest");
-		
+				currentActiveUser.getEmail() , destEmail , "FriendRequest");		
 	}
-	 
-  public void signOut()
-  {
-	  currentActiveUser = null;
-  }
+
+	public void addfriend(String destEmail )
+	{
+		new Connection().execute(
+				"http://fci-codezilla256.appspot.com/rest/AddFriend",
+				currentActiveUser.getEmail() , destEmail , "AddFriend");		
+	}
+	
+	public void GetMyGroupMsgs() { 
+
+	new Connection().execute(
+	"http://fci-codezilla256.appspot.com/rest/GetMyGroupMsgs",
+	currentActiveUser.getEmail(),"GetMyGroupMsgs");
+	
+	}
+	
+	
+	public void createChatGroup(String groupName){
+		Toast.makeText(Application.getAppContext(),groupName,Toast.LENGTH_LONG).show();
+		new Connection().execute(
+				"http://fci-codezilla256.appspot.com/rest/createChatGroup",
+				currentActiveUser.getEmail(), groupName,"createChatGroup" );
+	//	Toast.makeText(Application.getAppContext(),groupName,Toast.LENGTH_LONG).show();
+	}
+	
+	
+	
+public void AddMemberInChatGroup(String memEmail,String ID){
+		
+		new Connection().execute(
+				"http://fci-codezilla256.appspot.com/rest/AddMemberInChatGroup",
+				memEmail,ID,"AddMemberInChatGroup");		
+	}
+	
+
+	
+	public void signOut()
+  	{
+		currentActiveUser = null;
+  	}
+
+	
 	static private class Connection extends AsyncTask<String, String, String> {
 
 		String serviceType;
@@ -81,17 +119,30 @@ public class UserController {
 			// TODO Auto-generated method stub
 			URL url;
 			serviceType = params[params.length - 1];
+			//Toast.makeText(Application.getAppContext(),serviceType,Toast.LENGTH_LONG).show();
 			String urlParameters;
 			
 			if (serviceType.equals("LoginService"))
 				urlParameters = "uname=" + params[1] + "&password=" + params[2];
-							
+				//Toast.makeText(Application.getAppContext(),urlParameters,Toast.LENGTH_LONG).show();
+			else if(serviceType.equals("AddFriend"))
+				urlParameters = "Esource=" + params[1] + "&Edestination=" + params[2];
+
 			else if(serviceType.equals("FriendRequest"))
 				urlParameters = "Esource=" + params[1] + "&Edestination=" + params[2];
+
+			else if(serviceType.equals("SearchFriendRequest") )
+				urlParameters = "Esource=" + params[1];
 			
-			else if(serviceType.equals("SearchFriendRequest"))
+			else if(serviceType.equals("GetMyGroupMsgs"))
+				urlParameters = "Esource=" + params[1];
+				//Toast.makeText(Application.getAppContext(),urlParameters,Toast.LENGTH_LONG).show();
+		
+			else if(serviceType.equals("createChatGroup") )
+				urlParameters = "Esource=" + params[1] + "&GrName=" + params[2];
 				
-				urlParameters = "Esource" + params[1];
+			else if( serviceType.equals("AddMemberInChatGroup") )
+			   urlParameters = "mmEmail=" + params[1] + "&ChatID=" + params[2];
 			
 			else
 				urlParameters = "uname=" + params[1] + "&email=" + params[2]
@@ -123,7 +174,7 @@ public class UserController {
 				while ((line = reader.readLine()) != null) {
 					retJson += line;
 				}
-
+				
 				return retJson;
 
 			} catch (IOException e) {
@@ -133,24 +184,27 @@ public class UserController {
 			return null;
 
 		}
-
+		
 		@Override
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
+
 			super.onPostExecute(result);
+			
 			try {
-				Toast.makeText(Application.getAppContext(), result,Toast.LENGTH_LONG).show();
+				Toast.makeText(Application.getAppContext(),
+						serviceType+result, Toast.LENGTH_LONG).show();
 				JSONObject object = new JSONObject(result);
 						
-				if (!object.has("Status")
-						|| object.getString("Status").equals("Failed")) {
+				if ( !serviceType.equals("createChatGroup") &&  !serviceType.equals("GetMyGroupMsgs") &&  !serviceType.equals("SearchFriendRequest") && !serviceType.equals("AddFriend")&& 
+						(!object.has("Status")
+						|| object.getString("Status").equals("Failed"))) {
 					Toast.makeText(Application.getAppContext(),
 							"Error occured", Toast.LENGTH_LONG).show();
 					return;
 				}
 
-				if (serviceType.equals("LoginService")) {
-
+				if (serviceType.equals("LoginService")) {					
 					currentActiveUser = UserEntity.createLoginUser(result);
 
 					Intent homeIntent = new Intent(Application.getAppContext(),
@@ -166,10 +220,71 @@ public class UserController {
 
 					Application.getAppContext().startActivity(homeIntent);
 				}
+				
+   				else if(serviceType.equals("AddFriend"))
+				{
 
+   					
+   					
+				}
+
+		
+				else if (serviceType.equals("createChatGroup")) 
+				{					
+					/*
+					Intent homeIntent = new Intent(Application.getAppContext(),
+							HomeActivity.class);
+
+					homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					
+					Application.getAppContext().startActivity(homeIntent);
+
+					
+			*/
+					}
+				
+				else if (serviceType.equals("AddMemberInChatGroup")) 
+				{					
+					
+					Intent homeIntent = new Intent(Application.getAppContext(),
+							HomeActivity.class);
+
+					
+					homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					
+					Application.getAppContext().startActivity(homeIntent);
+				}			
+				
+				else if(serviceType.equals("GetMyGroupMsgs"))
+				{
+					
+					Iterator<String> iter = object.keys();
+      				 String ID="", gpName="";
+					 while (iter.hasNext()) {
+					        String key = iter.next();
+					        try {
+					        	ID += key+"#";
+					        	gpName += object.get(key)+"#";
+					        } catch (JSONException e) {
+					            // Something went wrong!
+					        }
+					
+				}
+					 
+					 Intent frReqIntent = new Intent(Application.getAppContext(),
+								FriendRequestsActivity.class);
+					frReqIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					
+				//		frReqIntent.putExtra("unames", unames);
+					//	frReqIntent.putExtra("emails", emails);
+
+						Application.getAppContext().startActivity(frReqIntent);
+								
+				}
+							
 				else if(serviceType.equals("SearchFriendRequest"))
 				{
-       				 Iterator<String> iter = object.keys();
+					Iterator<String> iter = object.keys();
        				 String unames="", emails="";
 					 while (iter.hasNext()) {
 					        String key = iter.next();
@@ -180,14 +295,19 @@ public class UserController {
 					            // Something went wrong!
 					        }
 					 }
-					 Intent homeIntent = new Intent(Application.getAppContext(),
+					 
+					 Intent frReqIntent = new Intent(Application.getAppContext(),
 								FriendRequestsActivity.class);
-						homeIntent.putExtra("uname", unames);
-						homeIntent.putExtra("emails", emails);
+ 					frReqIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+ 					
+						frReqIntent.putExtra("unames", unames);
+						frReqIntent.putExtra("emails", emails);
 
-						Application.getAppContext().startActivity(homeIntent);
+						Application.getAppContext().startActivity(frReqIntent);
 				}
-				else {
+
+				else  
+				{
 					Intent homeIntent = new Intent(Application.getAppContext(),
 							HomeActivity.class);
 					homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

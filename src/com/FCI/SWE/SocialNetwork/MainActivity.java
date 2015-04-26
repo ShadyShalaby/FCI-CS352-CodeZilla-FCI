@@ -26,7 +26,6 @@ public class MainActivity extends Activity {
 				Intent loginIntent = new Intent(getApplicationContext(),
 						LoginActivity.class);
 				startActivity(loginIntent);
-
 			}
 		});
 		signUp.setOnClickListener(new OnClickListener() {

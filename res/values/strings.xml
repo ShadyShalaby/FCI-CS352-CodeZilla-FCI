@@ -14,5 +14,6 @@
     <string name="SendFriendRequestButton">Send Friend Request</string>
     <string name="AddFriendButton">Accept Friend</string>
     <string name="signoutButton">Sign Out</string>
+    <string name="reqsTextField">My Friend Requests</string>
 
 </resources>

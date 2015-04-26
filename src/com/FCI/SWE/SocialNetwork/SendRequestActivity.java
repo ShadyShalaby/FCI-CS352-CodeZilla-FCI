@@ -27,7 +27,6 @@ public class SendRequestActivity extends Activity implements OnClickListener {
 
 	}
 	
-	
 	@Override
 	public void onClick(View v) {
 

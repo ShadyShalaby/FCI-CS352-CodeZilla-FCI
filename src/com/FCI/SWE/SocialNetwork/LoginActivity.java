@@ -33,6 +33,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		UserController controller = Application.getUserController();
 		controller.login(userNameEditText.getText().toString(),
 				passwordEditText.getText().toString());
+		
 
 	}
 

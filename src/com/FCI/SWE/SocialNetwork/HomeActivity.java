@@ -19,7 +19,7 @@ public class HomeActivity extends Activity{
 	Button FriendRequestActivity;
 	Button addFriend;
 	Button signOut;
-
+    Button createChatGp;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class HomeActivity extends Activity{
 		}
 		);
 		
-		addFriend = (Button) findViewById(R.id.addFriendActivity);
+		addFriend = (Button) findViewById(R.id.addFriendButton);
 		
 		addFriend.setOnClickListener(new View.OnClickListener() {
 			
@@ -65,7 +65,7 @@ public class HomeActivity extends Activity{
 		}
 		);
 
-		
+	
 		
 		signOut = (Button) findViewById(R.id.signOutActivity);
 		
@@ -85,6 +85,24 @@ public class HomeActivity extends Activity{
 		}
 		);
 		
+	
+	createChatGp = (Button) findViewById(R.id.createChatGpButton);
+		
+	createChatGp.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+	
+				UserController controller = Application.getUserController();
+				controller.createChatGroup("shokryy");
+			}
+		}
+		);
+		
+		
+		
+	
+	
 	}
 
 
