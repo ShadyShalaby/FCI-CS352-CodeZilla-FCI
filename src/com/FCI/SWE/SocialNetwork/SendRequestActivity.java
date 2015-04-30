@@ -2,6 +2,7 @@ package com.FCI.SWE.SocialNetwork;
 
 import com.FCI.SWE.Controllers.Application;
 import com.FCI.SWE.Controllers.UserController;
+import com.FCI.SWE.Links.SendFriendReq;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -31,7 +32,8 @@ public class SendRequestActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 
 		UserController controller = Application.getUserController();
-		controller.sendRequest(destEmail.getText().toString());
+		SendFriendReq sendReq = new SendFriendReq();
+		controller.execute(sendReq,controller.getCurrentActiveUser().getEmail() , destEmail.getText().toString());
 		
 	}
 

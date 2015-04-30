@@ -2,6 +2,7 @@ package com.FCI.SWE.SocialNetwork;
 
 import com.FCI.SWE.Controllers.Application;
 import com.FCI.SWE.Controllers.UserController;
+import com.FCI.SWE.Links.SignUp;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -34,7 +35,8 @@ public class RegistrationActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		UserController controller = Application.getUserController();
-		controller.signUp(userNameEditText.getText().toString(),
+		SignUp signUp = new SignUp();
+		controller.execute(signUp, userNameEditText.getText().toString(),
 				userEmailEditText.getText().toString(), passwordEditText
 						.getText().toString());
 

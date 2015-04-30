@@ -2,6 +2,7 @@ package com.FCI.SWE.SocialNetwork;
 
 import com.FCI.SWE.Controllers.Application;
 import com.FCI.SWE.Controllers.UserController;
+import com.FCI.SWE.Links.LogIn;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -31,7 +32,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		UserController controller = Application.getUserController();
-		controller.login(userNameEditText.getText().toString(),
+		LogIn logIn = new LogIn();
+		controller.execute(logIn, userNameEditText.getText().toString(),
 				passwordEditText.getText().toString());
 		
 
