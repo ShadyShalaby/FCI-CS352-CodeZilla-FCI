@@ -2,6 +2,8 @@ package com.FCI.SWE.Controllers;
 
 import java.util.ArrayList;
 
+import observerDP.GroupObserver;
+
 public class GroupChat {
 	
   private ArrayList<String> users;
